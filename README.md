@@ -44,6 +44,16 @@ Proyecto académico para análisis y modelado de sistemas eléctricos desequilib
 
 By:
 
+• Suarez Reyes Nicolas
+• Duran Tarazona Valeria
+• Gómez Morales Miguel
+• Reyes Corzo Edinso
+• Siza Meléndez David
+• Lozano Herrera Keydy
+• Valbuena Guerrero Brajhan
+• Florez Villamizar Nancy
+• Palencia Salinas Kristian
+• Jaiver Isaac Carreño Melendres
 
 
 
