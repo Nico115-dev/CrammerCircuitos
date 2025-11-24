@@ -1,0 +1,68 @@
+% --- Código para resolver el sistema 3x3 por la Regla de Cramer ---
+clc; clear;
+
+% 1. Definición de Parámetros
+V_fase = 120;
+V_linea = 240;
+R_N = 20; % Resistencia Neutro
+
+% Nuevos valores de Impedancia
+Z_ref = 9.9827 + 9.9827i; % Refrigerador (L1 a N')
+R_lamp = 144;             % Lámpara (L2 a N')
+R_estufa = 4.8;           % Hornilla (L1 a L2)
+
+% 2. Construcción de la Matriz de Impedancias [Z] (Z * I = V)
+% Z11 = Z_ref + R_N
+% Z22 = R_lamp + R_N
+% Z33 = R_estufa
+Z = [ (Z_ref + R_N),    -R_N,               0;
+      -R_N,             (R_lamp + R_N),     0;
+      0,                0,                  R_estufa ];
+
+% 3. Vector de Voltajes [V]
+V = [ V_fase; V_fase; V_linea ];
+
+% --- Aplicación de la Regla de Cramer ---
+
+% Paso A: Determinante del Sistema (Delta)
+Delta = det(Z);
+
+% Paso B: Determinantes de Sustitución (Delta_n)
+% Delta_1: Reemplazar Columna 1 por V
+Z1 = Z; Z1(:,1) = V;
+Delta1 = det(Z1);
+
+% Delta_2: Reemplazar Columna 2 por V
+Z2 = Z; Z2(:,2) = V;
+Delta2 = det(Z2);
+                                    
+% Delta_3: Reemplazar Columna 3 por V
+Z3 = Z; Z3(:,3) = V;
+Delta3 = det(Z3);
+
+% Paso C: Cálculo de Corrientes I_n = Delta_n / Delta
+I1 = Delta1 / Delta; % Corriente Malla 1 (Refrigerador)
+I2 = Delta2 / Delta; % Corriente Malla 2 (Lámpara)
+I3 = Delta3 / Delta; % Corriente Malla 3 (Hornilla)
+
+% --- Cálculo de Voltajes y Presentación de Resultados ---
+
+V_lamp = I2 * R_lamp;
+V_R_ref = I1 * Z_ref; % Voltaje en la Resistencia del Ref.
+
+disp('--- Solución por Regla de Cramer (Matriz 3x3) ---');
+fprintf('\nDeterminante del Sistema (Delta): %.4f %+.4fi\n', real(Delta), imag(Delta));
+fprintf('Determinante Delta 1: %.4f %+.4fi\n', real(Delta1), imag(Delta1));
+fprintf('Determinante Delta 2: %.4f %+.4fi\n', real(Delta2), imag(Delta2));
+fprintf('Determinante Delta 3: %.4f %+.4fi\n', real(Delta3), imag(Delta3));
+
+disp(' ');
+disp('--- Corrientes de Malla ---');
+fprintf('I1 (Refrigerador): %.4f %+.4fi A\n', real(I1), imag(I1));
+fprintf('I2 (Lámpara):     %.4f %+.4fi A\n', real(I2), imag(I2));
+fprintf('I3 (Hornilla):    %.4f %+.4fi A\n', real(I3), imag(I3));
+
+disp(' ');
+disp('--- Voltajes Solicitados ---');
+fprintf('Voltaje en la Lámpara (Magnitud): %.2f V\n', abs(V_lamp));
+fprintf('Voltaje en R del Ref (Magnitud):  %.2f V\n', abs(V_R_ref));
